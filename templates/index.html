@@ -1,108 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamond Valuation & Rapaport Calculator | Inventory Tool</title>
+    <title>Diamond Price Calculator | Rapaport Valuation Tool</title>
+    <meta name="description"
+        content="Calculate real-time diamond prices based on official Rapaport tables. Instantly find the value per carat for D-M color and IF-I3 clarity grades.">
+    <meta name="keywords" content="Diamond Price Calculator, Rapaport Chart, Carat Valuation, Diamond Value Tool">
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 2.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem; color: #0f172a; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
-        input, select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 1rem; box-sizing: border-box; }
-        button { width: 100%; padding: 0.75rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer; border: none; transition: all 0.2s; }
-        .btn-main { background: var(--primary); color: white; margin-top: 1rem; }
-        .btn-main:hover { background: #1d4ed8; }
-        .btn-sec { background: #e2e8f0; color: #475569; margin-top: 0.5rem; }
-        #resultBox { margin-top: 1.5rem; padding: 1rem; border-radius: 0.5rem; background: #eff6ff; display: none; text-align: center; border: 1px solid #bfdbfe; }
-        .error-msg { color: #dc2626; font-size: 0.875rem; margin-top: 0.5rem; display: none; text-align: center; }
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: var(--primary);
+            color: white;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #resultBox {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: #eff6ff;
+            display: none;
+            text-align: center;
+            border: 1px solid #bfdbfe;
+        }
+
+        .history-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-item {
+            font-size: 0.8rem;
+            padding: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Diamond Valuation Tool</h1>
-    
-    <div class="form-group">
-        <label>Carat Weight (ct)</label>
-        <input type="number" id="weight" step="0.01" placeholder="e.g. 1.05" autofocus>
+    <div class="container">
+        <h1>Diamond Price Calculator</h1>
+
+        <div class="form-group">
+            <label>Weight (Carats)</label>
+            <input type="number" id="weight" step="0.01" placeholder="e.g. 1.05" autofocus>
+        </div>
+
+        <div class="form-group">
+            <label>Color</label>
+            <select id="color">
+                <option>D</option>
+                <option>E</option>
+                <option>F</option>
+                <option>G</option>
+                <option>H</option>
+                <option>I</option>
+                <option>J</option>
+                <option>K</option>
+                <option>L</option>
+                <option>M</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Clarity</label>
+            <select id="clarity">
+                <option>IF</option>
+                <option>VVS1</option>
+                <option>VVS2</option>
+                <option>VS1</option>
+                <option>VS2</option>
+                <option>SI1</option>
+                <option>SI2</option>
+                <option>SI3</option>
+                <option>I1</option>
+                <option>I2</option>
+                <option>I3</option>
+            </select>
+        </div>
+
+        <button onclick="calculatePrice()">Calculate Value</button>
+
+        <div id="errorBox" class="error-msg"></div>
+
+        <div id="resultBox">
+            <div style="font-size: 0.875rem; color: #64748b;">Rate/ct: <span id="rateVal"
+                    style="font-weight: bold; color: var(--primary);"></span></div>
+            <div style="font-size: 1.25rem; font-weight: 800; margin-top: 5px;">Total: <span id="totalVal"></span></div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>Color Grade</label>
-        <select id="color">
-            <option>D</option><option>E</option><option>F</option><option>G</option><option>H</option>
-            <option>I</option><option>J</option><option>K</option><option>L</option><option>M</option>
-        </select>
+    <div class="history-container">
+        <h3 style="font-size: 0.9rem; margin-top: 0;">Recent Calculations</h3>
+        <div id="historyList"></div>
+        <button onclick="clearHistory()"
+            style="background: #f1f5f9; color: #64748b; font-size: 0.75rem; padding: 5px; margin-top: 10px;">Clear
+            List</button>
     </div>
 
-    <div class="form-group">
-        <label>Clarity Grade</label>
-        <select id="clarity">
-            <option>IF</option><option>VVS1</option><option>VVS2</option><option>VS1</option><option>VS2</option>
-            <option>SI1</option><option>SI2</option><option>SI3</option><option>I1</option><option>I2</option><option>I3</option>
-        </select>
-    </div>
+    <script>
+        window.onload = updateHistoryUI;
 
-    <button class="btn-main" onclick="runCalculation()">Calculate & Save Entry</button>
-    <button class="btn-sec" onclick="openExcel()">📂 Open Inventory Excel</button>
+        async function calculatePrice() {
+            const weightInput = document.getElementById('weight');
+            const errBox = document.getElementById('errorBox');
+            const resBox = document.getElementById('resultBox');
 
-    <div id="errorBox" class="error-msg"></div>
+            errBox.style.display = 'none';
 
-    <div id="resultBox">
-        <div style="font-size: 0.875rem; color: #64748b;">Rate: <span id="rateVal" style="font-weight: bold; color: var(--primary);"></span>/ct</div>
-        <div style="font-size: 1.25rem; font-weight: 800; margin-top: 0.25rem;">Total: <span id="totalVal"></span></div>
-        <div id="excelWarning" style="color: #ea580c; font-size: 0.75rem; margin-top: 0.5rem; display: none;">⚠️ Close Excel to save next entry!</div>
-    </div>
-</div>
+            const payload = {
+                weight: weightInput.value,
+                color: document.getElementById('color').value,
+                clarity: document.getElementById('clarity').value
+            };
 
-<script>
-    async function runCalculation() {
-        const weightInput = document.getElementById('weight');
-        const errBox = document.getElementById('errorBox');
-        const resBox = document.getElementById('resultBox');
-        
-        errBox.style.display = 'none';
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-        const payload = {
-            weight: weightInput.value,
-            color: document.getElementById('color').value,
-            clarity: document.getElementById('clarity').value
-        };
+                const data = await response.json();
 
-        try {
-            const response = await fetch('/calculate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(payload)
-            });
-            
-            const data = await response.json();
+                if (data.success) {
+                    document.getElementById('rateVal').innerText = "$" + data.rate.toLocaleString();
+                    document.getElementById('totalVal').innerText = "$" + data.total.toLocaleString();
+                    resBox.style.display = 'block';
 
-            if (data.success) {
-                document.getElementById('rateVal').innerText = "$" + data.rate.toLocaleString();
-                document.getElementById('totalVal').innerText = "$" + data.total.toLocaleString();
-                document.getElementById('excelWarning').style.display = (data.saved === "LOCKED") ? "block" : "none";
-                resBox.style.display = 'block';
-                
-                // RESET AND FOCUS FOR NEXT ENTRY
-                weightInput.value = "";
-                weightInput.focus();
-            } else {
-                errBox.innerText = data.error;
+                    // Save to local browser history
+                    saveToHistory(payload.weight, payload.color, payload.clarity, data.total);
+
+                    weightInput.value = "";
+                    weightInput.focus();
+                } else {
+                    errBox.innerText = data.error;
+                    errBox.style.display = 'block';
+                    resBox.style.display = 'none';
+                }
+            } catch (e) {
+                errBox.innerText = "Server Error. Please redeploy.";
                 errBox.style.display = 'block';
-                resBox.style.display = 'none';
             }
-        } catch (e) {
-            alert("Server not responding. Ensure Python is running.");
         }
-    }
 
-    async function openExcel() {
-        await fetch('/open-file');
-    }
-</script>
+        function saveToHistory(w, co, cl, total) {
+            let history = JSON.parse(localStorage.getItem('dia_history') || "[]");
+            history.unshift({ w, co, cl, total, time: new Date().toLocaleTimeString() });
+            localStorage.setItem('dia_history', JSON.stringify(history.slice(0, 10)));
+            updateHistoryUI();
+        }
+
+        function updateHistoryUI() {
+            const history = JSON.parse(localStorage.getItem('dia_history') || "[]");
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(item => `
+            <div class="history-item">
+                <span>${item.w}ct ${item.co}/${item.cl}</span>
+                <span style="font-weight: bold;">$${item.total.toLocaleString()}</span>
+            </div>
+        `).join('');
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('dia_history');
+            updateHistoryUI();
+        }
+    </script>
 </body>
+
 </html>
