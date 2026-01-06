@@ -80,5 +80,5 @@ def open_file():
         return jsonify({"success": True})
     return jsonify({"success": False, "error": "No file created yet."})
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+# No app.run() needed for Vercel
+app = app
